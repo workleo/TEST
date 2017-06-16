@@ -1,0 +1,16 @@
+<div>
+    <ul style="width: 80%;display: block;">
+        <?php
+        $reviews = $repository->getReviewByProductId($product['id']);
+        foreach ($reviews as $review) {
+            echo '<li style="display:inline-block;width: 100%;margin-top: 5px;list-style-position: inside; ">'
+                . '<span style="width: 90%; float:left;clear: both;padding-left: 20px;" name="spReview' . $review['id'] . '">'
+                . $review['content'] . '</span>'
+                . '<button type="button" name="btnDelReview" value="' . $review['id']
+                . '" onclick="">Delete</button><br> '
+                . '</li>';
+        }
+        ?>
+    </ul>
+</div>
+<div id="dialog"></div>

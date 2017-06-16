@@ -1,0 +1,25 @@
+<?php
+$repository = new Core();
+?>
+
+<head>
+    <title><?php echo $response['title'] ?></title>
+</head>
+<div style="border: 1px solid #eee; margin-bottom: 20px; float: left;">
+    <div style="float: left; width: 30%; text-align: center"><img
+                src="<?php echo sprintf('https://op1.ec.tc/%s/%s', '200-200-ffffff', $product['image']) ?>"></div>
+    <div style="float: left; width: 70%">
+        <h4>
+            <a href="<?php echo $product['url'] ?>"><?php echo $product['name'] ?></a></h4>
+        <!-- make whole product element clickable -->
+        <strong>Review count:
+        <?php
+        //'COUNT OF PRODUCT REVIEWS IS NEEDED HERE'
+        echo($repository->getCountReview($product['id']));
+        ?>
+        </strong>
+
+        <p><?php echo $product['description'] ?></p>
+        <span style="font-size: 24px; color: #f00">$<?php echo $product['price'] ?></span>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+
+    RewriteEngine On
+
+    # Do not rewrite layout folder (/l/)
+    RewriteCond %{REQUEST_URI} !/l/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{ENV:VirtualDocumentRoot} 1
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+
+    # This is used for normal VirtualHost, with static DocumentRoot
+    # It works both when ran in the root folder of a vhost, or in a subdirectory
+
+    # Do not rewrite layout folder (/l/)
+    RewriteCond %{REQUEST_URI} !/l/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

@@ -1,0 +1,15 @@
+<html>
+
+    <body>
+        <h1>
+            <?php echo $response['title'] ?>
+        </h1>
+        <div>
+            <?php
+                foreach ($response['products'] as $product) {
+                    require('product.phtml');
+                }
+            ?>
+        </div>
+    </body>
+</html>

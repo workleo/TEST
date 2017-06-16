@@ -1,0 +1,126 @@
+<?php
+$repository = new Core();
+
+$nameErr = $emailErr = $reviewErr = "";
+$name = $email = $review = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    alertNicely('');
+
+    if (isset($_POST['submit_button'])) {
+        if (empty($_POST["name"])) {
+            $nameErr = "Name is required";
+        } else {
+            $name = test_input($_POST["name"]);
+// check if name only contains letters and whitespace
+            if (!preg_match("/^[a-zA-Z ]*$/", $name)) {
+                $nameErr = "Only letters and white space allowed";
+            }
+        }
+
+
+        if (empty($_POST["email"])) {
+            $emailErr = "Email is required";
+        } else {
+            $email = test_input($_POST["email"]);
+// check if e-mail address is well-formed
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $emailErr = "Invalid email format";
+            }
+        }
+
+        if (empty($_POST["review"])) {
+            $reviewErr = 'The review can"t be empty';
+        } else {
+            $review = test_input($_POST["review"]);
+        }
+
+        if (($nameErr !== '') || ($emailErr) || ($reviewErr)) {
+            alertNicely($nameErr . "\n\r" . $emailErr . "\n\r" . $reviewErr);
+        } else {
+            $repository->addReview($product['id'], $name, $email, $review);
+            $product = $repository->getProductByUrl($url);
+            header("Location:" . $product['url']);
+        }
+    }
+
+
+    if (isset($_POST['btnDelReview'])) {
+        $product = $repository->getProductByUrl($url);
+        header("Location:" . $product['url']);
+    }
+
+}
+
+
+function test_input($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+function alertNicely($msg)
+{
+    echo '<div id="critical_error" style="color: red;border: none"><h2>' . $msg . '</h2></div>';
+}
+
+?>
+
+
+<head>
+
+    <link type="text/css" href="css/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link type="text/css" href="css/themes/smoothness/jquery-dialog-ui.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <title>Product - <?php echo $response['title'] ?></title>
+
+</head>
+<body>
+<form method="post" enctype="multipart / form - data" action="" id="formProduct" name="formProduct">
+
+    <!--
+    <form method="post" action=" ? php echo $_SERVER['PHP_SELF']; ?>">
+     -->
+
+
+    <h1><?php echo $response['title'] ?></h1>
+    <div>
+        <div style="margin: 20px; float: left;">
+            <div>
+                <img style="max-width: 250px"
+                     src="<?php echo sprintf('https://op1.ec.tc/%s/%s', 'full-size', $product['image']) ?>">
+            </div>
+            <div style="float: left;clear: both;">
+                <h4><a href="<?php echo $product['url'] ?>"><?php echo $product['name'] ?></a></h4>
+                <!-- make whole product element clickable -->
+                <p><?php echo $product['description'] ?></p>
+                <span style="font-size: 24px; color: #f00">$<?php echo $product['price'] ?></span>
+            </div>
+            <div style="margin-top: 20px">
+                <h4>COUNT OF PRODUCT REVIEWS =
+                    <?php echo($repository->getCountReview($product['id'])); ?>
+                </h4>
+                <div class="review-list">
+                    <div><h4>LIST OF PRODUCT REVIEWS :</h4></div>
+                    <?php require('review_list.phtml'); ?>
+                </div>
+            </div>
+            <div id="write-review" style="padding: 20px 0; clear:both;">
+                <div><?php
+                    require('review_add.phtml');
+                    ?></div>
+            </div>
+            <!-- href was jast a /  -->
+            <div style="padding: 20px 0"><a href="index.php">Back to list</a></div>
+        </div>
+    </div>
+</form>
+</body>
+
+<script type="text/javascript" src="js/submit_jquery.js"></script>
+</html>
